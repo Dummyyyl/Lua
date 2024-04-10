@@ -1,0 +1,354 @@
+local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
+local Window = OrionLib:MakeWindow({Name = "Squid Game | Lua Hub", HidePremium = false, SaveConfig = true, ConfigFolder = "OrionTest"})
+
+local Main = Window:MakeTab({
+	Name = "Main",
+	Icon = "rbxassetid://4483345998",
+	PremiumOnly = false
+})
+
+local RedGreen = Window:MakeTab({
+	Name = "Red/Green Light",
+	Icon = "rbxassetid://4483345998",
+	PremiumOnly = false
+})
+
+local Tag = Window:MakeTab({
+	Name = "Tag",
+	Icon = "rbxassetid://4483345998",
+	PremiumOnly = false
+})
+
+local Honey = Window:MakeTab({
+	Name = "Honey",
+	Icon = "rbxassetid://4483345998",
+	PremiumOnly = false
+})
+
+local Glass = Window:MakeTab({
+	Name = "Glass bridge",
+	Icon = "rbxassetid://4483345998",
+	PremiumOnly = false
+})
+
+local Thug = Window:MakeTab({
+	Name = "Bridge thug",
+	Icon = "rbxassetid://4483345998",
+	PremiumOnly = false
+})
+
+local Credits = Window:MakeTab({
+	Name = "Credits",
+	Icon = "rbxassetid://4483345998",
+	PremiumOnly = false
+})
+
+--//-------------------------------------------------------------------------------------------------------------\\--
+local lp = game.Players.LocalPlayer
+
+--//-------------------------------------------------------------------------------------------------------------\\--Main
+
+Main:AddButton({
+	Name = "Light On",
+	Callback = function()
+        local Light = game:GetService("Lighting")
+        function dofullbright()
+        Light.Ambient = Color3.new(1, 1, 1)
+        Light.ColorShift_Bottom = Color3.new(1, 1, 1)
+        Light.ColorShift_Top = Color3.new(1, 1, 1)
+        end
+        dofullbright()
+        Light.LightingChanged:Connect(dofullbright)
+  	end    
+})
+
+game:GetService('RunService').Stepped:connect(function()
+    if KillAura == true then
+        pcall(function()
+            for _, v in pairs(workspace:GetChildren()) do
+                if v:FindFirstChild("HumanoidRootPart") and v:FindFirstChild("Body Colors") and v.Name ~= game.Players.LocalPlayer.Name then
+                    local args = {[1] = v.Humanoid,[2] = 7}
+                    game:GetService("ReplicatedStorage").Remotes.Replication:FireServer(unpack(args))
+                end
+            end
+        end)
+    end
+end)
+
+Main:AddToggle({
+	Name = "KillAura (Hold a bat)",
+	Default = false,
+	Callback = function(Value)
+		if Value == true then
+            KillAura = true
+        else
+            KillAura = false
+        end
+	end    
+})
+
+spawn(function()
+    while task.wait() do
+        if KillAll then
+            pcall(function()
+                for _, v in pairs(workspace:GetChildren()) do
+                    if v:FindFirstChild("HumanoidRootPart") and v:FindFirstChild("Body Colors") and v.Name ~= game.Players.LocalPlayer.Name and v.Humanoid.Health ~= 0 then
+                        for i = 1,30 do
+                        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame
+                        if KillAll == false then break end
+                        wait(0.001)
+                        end
+                    end
+                end
+            end)
+        end
+    end
+end)
+
+Main:AddToggle({
+	Name = "Kill all (Needs a bat)",
+	Default = false,
+	Callback = function(Value)
+		if Value == true then
+            if lp.Backpack:FindFirstChild('Baseball Bat') then
+            lp.Backpack:FindFirstChild('Baseball Bat').Parent = lp.Character
+            end
+            KillAll = true
+            KillAura = true
+        else
+            KillAll = false
+            KillAura = false
+        end
+	end    
+})
+
+local Players = {}
+for i,v in pairs(workspace:GetChildren()) do
+    if v:FindFirstChild("HumanoidRootPart") and v:FindFirstChild("Body Colors") then
+        table.insert(Players, v.Name)
+    end
+end
+
+Main:AddDropdown({
+	Name = "Goto",
+	Default = "",
+	Options = Players,
+	Callback = function(Value)
+        print(Value)
+		game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game.Players[Value].Character.HumanoidRootPart.CFrame
+	end    
+})
+
+Main:AddSlider({
+	Name = "Speed",
+	Min = 0,
+	Max = 150,
+	Default = 25,
+	Color = Color3.fromRGB(192,192,192),
+	Increment = 1,
+	ValueName = "Your Speed",
+	Callback = function(Speed)
+        game:GetService('RunService'):BindToRenderStep("WalkSpeed", 0 , function()
+            pcall(function()
+            game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = Speed
+            wait(.1)
+            end)
+        end)
+	end    
+})
+
+
+Main:AddSlider({
+	Name = "JumpPower",
+	Min = 0,
+	Max = 200,
+	Default = 60,
+	Color = Color3.fromRGB(192,192,192),
+	Increment = 1,
+	ValueName = "Your JumpPower",
+	Callback = function(JumpPower)
+        game:GetService('RunService'):BindToRenderStep("JumpPower", 0 , function()
+            pcall(function()
+            game.Players.LocalPlayer.Character.Humanoid.JumpPower = JumpPower
+            game.Players.LocalPlayer.Character.Humanoid.UseJumpPower = true
+            wait(.1)
+            end)
+        end)
+	end    
+})
+
+RedGreen:AddButton({
+	Name = "Finish (Tp)",
+	Callback = function()
+		game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-111.800018, 21.0625, -646.949951, 1, 0, 0, 0, 1, 0, 0, 0, 1)
+  	end    
+})
+
+RedGreen:AddButton({
+	Name = "Finish (Silent)",
+	Callback = function()
+		firetouchinterest(game.Players.LocalPlayer.Character.Head, workspace.Game1.SafeZone, 0)
+		wait(0.1)
+		firetouchinterest(game.Players.LocalPlayer.Character.Head, workspace.Game1.SafeZone, 1)
+  	end    
+})
+
+RedGreen:AddLabel("FrontMan")
+
+game:GetService('RunService').Stepped:connect(function()
+    if AutoSpeed == true then
+        local args = {[1] = "RedLightGreenLight"}
+        game:GetService("ReplicatedStorage").Remotes.Frontman:FireServer(unpack(args))
+    end
+end)
+
+RedGreen:AddToggle({
+	Name = "Auto SpeedUp",
+	Default = false,
+	Callback = function(Value)
+		if Value == true then
+            AutoSpeed = true
+        else
+            AutoSpeed = false
+        end
+	end    
+})
+
+Tag:AddButton({
+	Name = "Save Tp",
+	Callback = function()
+		game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-21.4749565, -142.300003, 776.050049, 0, 0, 1, 0, 1, -0, -1, 0, 0) + Vector3.new(0,2,0)
+  	end    
+})
+
+Tag:AddButton({
+	Name = "Give Tag Away",
+	Callback = function()
+        while lp.Backpack:FindFirstChild('Tag') or lp.Character:FindFirstChild('Tag') do
+        for _, v in pairs(workspace:GetChildren()) do
+            if v:FindFirstChild("HumanoidRootPart") and v:FindFirstChild("Body Colors") and v.Name ~= game.Players.LocalPlayer.Name and v.Humanoid.Health ~= 0 then
+                if lp.Backpack:FindFirstChild('Tag') then
+                    lp.Backpack:FindFirstChild('Tag').Parent = lp.Character
+                    lp.Character:FindFirstChild('Tag'):Activate()
+                else
+                    lp.Character:FindFirstChild('Tag'):Activate()
+                    end
+                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame
+                if not lp.Backpack:FindFirstChild('Tag') or lp.Character:FindFirstChild('Tag') then break end
+                wait(0.01)
+                end
+            end
+        end
+        wait(0.2)
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-21.4749565, -142.300003, 776.050049, 0, 0, 1, 0, 1, -0, -1, 0, 0) + Vector3.new(0,2,0)
+    end
+})
+
+Honey:AddButton({
+	Name = "Finish game",
+	Callback = function()
+		local args = {[1] = true}
+        game:GetService("ReplicatedStorage").Remotes.SugarHoneycomb:FireServer(unpack(args))
+        workspace.Toothpick:Destroy()
+  	end    
+})
+
+Glass:AddButton({
+	Name = "Finish (Tp)",
+	Callback = function()
+		game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-336.425079, -114.224991, -190.224915, 1, 0, 0, 0, 1, 0, 0, 0, 1)
+  	end    
+})
+
+Glass:AddButton({
+	Name = "Finish (Silent)",
+	Callback = function()
+		firetouchinterest(game.Players.LocalPlayer.Character.Head, workspace.Game3.Win, 0)
+		wait(0.1)
+		firetouchinterest(game.Players.LocalPlayer.Character.Head, workspace.Game3.Win, 1)
+  	end    
+})
+
+local function SetBrickColorRecursive(folder)
+    for _, part in pairs(folder:GetChildren()) do
+        if part:IsA("Model") then
+            SetBrickColorRecursive(part) -- Recursively check subfolders
+        elseif part:FindFirstChild("TouchInterest") then
+            part.BrickColor = BrickColor.new("Really red")
+        else
+            part.BrickColor = BrickColor.new("Lime green")
+        end
+    end
+end
+
+Glass:AddButton({
+    Name = "Show Right / Wrong",
+    Callback = function()
+        local bridge = workspace.Game3.Tiles
+        SetBrickColorRecursive(bridge)
+    end
+})
+
+game:GetService('RunService').Stepped:connect(function()
+    if AutoClick == true then
+        game:GetService("ReplicatedStorage").TugRemote:FireServer()
+    end
+end)
+
+Thug:AddToggle({
+	Name = "AutoClick",
+	Default = false,
+	Callback = function(Value)
+		if Value == true then
+            AutoClick = true
+        else
+            AutoClick = false
+        end
+	end    
+})
+
+Thug:AddButton({
+	Name = "Disconnect from line",
+	Callback = function()
+        workspace.Game4.TugSystem.Side1:Destroy()
+        workspace.Game4.TugSystem.Side2:Destroy()
+  	end    
+})
+
+--//-------------------------------------------------------------------------------------------------------------\\--
+
+Credits:AddButton({
+	Name = "Dummy",
+	Callback = function()
+        OrionLib:MakeNotification({
+            Name = "Discord: ThatDummyGuy",
+            Content = "Script Dev, Website Creator",
+            Image = "rbxassetid://4483345998",
+            Time = 5
+        })
+  	end    
+})
+
+Credits:AddButton({
+	Name = "Bizarre",
+	Callback = function()
+        OrionLib:MakeNotification({
+            Name = "Discord: thatbizarreguy",
+            Content = "Website Creator, Server Manager, Media Manager",
+            Image = "rbxassetid://4483345998",
+            Time = 5
+        })
+  	end    
+})
+
+Credits:AddButton({
+	Name = "Jepe",
+	Callback = function()
+        OrionLib:MakeNotification({
+            Name = "Discord: 0jepe",
+            Content = "Script Dev\nScript Dev\nScript Dev\nScript Dev\nScript Dev\nScript Dev\nScript Dev\nScript Dev\nScript Dev\nScript Dev\nScript Dev\nScript Dev\nScript Dev\nScript Dev\nScript Dev\nScript Dev\nScript Dev\nScript Dev\nScript Dev\nScript Dev\nScript Dev\nScript Dev\nScript Dev",
+            Image = "rbxassetid://4483345998",
+            Time = 5
+        })
+  	end    
+})
